@@ -1,4 +1,4 @@
-# Example-HLS-Media-Stream [![Build Status](https://dev.azure.com/lganzzzo/lganzzzo/_apis/build/status/oatpp.example-hls-media-stream?branchName=master)](https://dev.azure.com/lganzzzo/lganzzzo/_build/latest?definitionId=12&branchName=master)
+# Example-HLS-Media-Stream [![Build Status](https://dev.azure.com/lganzzzo/lganzzzo/_apis/build/status/oatpp.example-hls-media-stream?branchName=master)](https://dev.azure.com/lganzzzo/lganzzzo/_build?definitionId=12&branchName=master)
 
 Example project how-to build HLS-streaming server using oat++ Async-API.
 
