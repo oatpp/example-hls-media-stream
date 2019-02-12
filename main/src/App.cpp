@@ -6,29 +6,11 @@
 //  Copyright © 2018 oatpp. All rights reserved.
 //
 
-//#define OATPP_USE_TARGET
-//#define OATPP_TARGET_TEST
-
-//////////////////////////////////
-// App
-
 #include "./controller/MediaController.hpp"
 #include "./AppComponent.hpp"
 #include "./Logger.hpp"
 
-//////////////////////////////////
-// Test
-
-#ifdef OATPP_TARGET_TEST
-#endif
-
-//////////////////////////////////
-// oatpp
-
 #include "oatpp/network/server/Server.hpp"
-
-//////////////////////////////////
-// std
 
 #include <iostream>
 
@@ -46,8 +28,8 @@ void run() {
   
   auto router = components.httpRouter.getObject();
   
-  auto MediaController = MediaController::createShared();
-  MediaController->addEndpointsToRouter(router);
+  auto mediaController = MediaController::createShared();
+  mediaController->addEndpointsToRouter(router);
   
   /* create server */
   
@@ -67,13 +49,8 @@ int main(int argc, const char * argv[]) {
   
   oatpp::base::Environment::setLogger(new Logger());
   oatpp::base::Environment::init();
-  
-#if !defined(OATPP_USE_TARGET) | defined(OATPP_TARGET_APP)
+
   run();
-#endif
-  
-#ifdef OATPP_TARGET_TEST
-#endif
   
   oatpp::base::Environment::setLogger(nullptr); ///< free Logger
   
