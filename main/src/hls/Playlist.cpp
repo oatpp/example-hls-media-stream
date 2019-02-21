@@ -10,20 +10,22 @@
 #include "../Utils.hpp"
 #include <cmath>
 
-Playlist Playlist::parse(oatpp::parser::ParsingCaret& caret) {
+Playlist Playlist::parse(oatpp::parser::Caret& caret) {
   
   auto result = RecordMarkerList::createShared();
   
   while (caret.canContinue()) {
     caret.findChar('#');
-    if(caret.proceedIfFollowsText("#EXTINF:")) {
+    if(caret.isAtText("#EXTINF:", true)) {
       v_float64 secs = caret.parseFloat64();
-      caret.findNextLine();
-      oatpp::parser::ParsingCaret::Label uriLabel(caret);
+      caret.findROrN();
+      caret.skipAllRsAndNs();
+      auto uriLabel = caret.putLabel();
       caret.findChar('\n');
       result->pushBack({secs, oatpp::String(uriLabel.toString())});
     }
-    caret.findNextLine();
+    caret.findROrN();
+    caret.skipAllRsAndNs();
   }
   
   return Playlist(result);
@@ -35,7 +37,7 @@ Playlist Playlist::parseFromFile(const char* filename) {
   if(!text){
     throw std::runtime_error("Can't find playlist file. Make sure you specified full file path's for video and playlist in AppComponent.hpp");
   }
-  oatpp::parser::ParsingCaret caret(text);
+  oatpp::parser::Caret caret(text);
   return parse(caret);
 }
 

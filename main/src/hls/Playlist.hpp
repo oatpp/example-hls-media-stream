@@ -10,7 +10,7 @@
 #define Playlist_hpp
 
 #include "oatpp/core/data/stream/ChunkedBuffer.hpp"
-#include "oatpp/core/parser/ParsingCaret.hpp"
+#include "oatpp/core/parser/Caret.hpp"
 
 #include <chrono>
 
@@ -38,7 +38,7 @@ public:
     });
   }
   
-  static Playlist parse(oatpp::parser::ParsingCaret& caret);
+  static Playlist parse(oatpp::parser::Caret& caret);
   static Playlist parseFromFile(const char* filename);
   
   std::shared_ptr<oatpp::data::stream::ChunkedBuffer> generateForTime(v_int64 millis, v_int32 numRecords);
