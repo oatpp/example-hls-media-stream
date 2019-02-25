@@ -45,7 +45,7 @@ std::shared_ptr<oatpp::data::stream::ChunkedBuffer> Playlist::generateForTime(v_
   if(m_records->count() == 0) {
     throw std::runtime_error("Empty playlist");
   }
-  auto stream = oatpp::data::stream::ChunkedBuffer::createShared();
+  auto stream = oatpp::data::stream::ChunkedBuffer::createShared();;
   
   v_float64 secs = (v_float64) millis / 1000.0;
   
@@ -83,7 +83,7 @@ std::shared_ptr<oatpp::data::stream::ChunkedBuffer> Playlist::generateForTime(v_
   
   OATPP_LOGD("playlist", "generating sequence %d", mediaSequence);
   
-  stream
+  *stream
   << "#EXTM3U\n"
   << "#EXT-X-TARGETDURATION:" << (v_int32)(targetDuration + 1) << "\n"
   << "#EXT-X-VERSION:3\n"
@@ -91,7 +91,7 @@ std::shared_ptr<oatpp::data::stream::ChunkedBuffer> Playlist::generateForTime(v_
   
   list.forEach([stream](const RecordMarker& marker){
     
-    stream
+    *stream
     << "#EXTINF:" << marker.duration << ",\n"
     << marker.uri << "\n";
     
