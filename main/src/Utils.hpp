@@ -18,7 +18,7 @@
 class StaticFilesManager {
 private:
   oatpp::String m_basePath;
-  oatpp::concurrency::SpinLock::Atom m_atom;
+  oatpp::concurrency::SpinLock m_lock;
   std::unordered_map<oatpp::String, oatpp::String> m_cache;
 private:
   oatpp::String getExtension(const oatpp::String& filename);
@@ -26,7 +26,6 @@ public:
   
   StaticFilesManager(const oatpp::String& basePath)
     : m_basePath(basePath)
-    , m_atom(false)
   {}
   
   oatpp::String getFile(const oatpp::String& path);

@@ -30,6 +30,7 @@ oatpp::String StaticFilesManager::getFile(const oatpp::String& path) {
   if(!path) {
     return nullptr;
   }
+  std::lock_guard<oatpp::concurrency::SpinLock> lock(m_lock);
   auto& file = m_cache [path];
   if(file) {
     return file;
