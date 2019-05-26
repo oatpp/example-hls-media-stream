@@ -8,8 +8,6 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_library(${project_name}-lib
         src/AppComponent.hpp
-        src/Logger.cpp
-        src/Logger.hpp
         src/Utils.cpp
         src/Utils.hpp
         src/controller/MediaController.hpp
