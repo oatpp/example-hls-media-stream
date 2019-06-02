@@ -26,16 +26,14 @@ Server is built using oat++ Async-Api and has following endpoints:
 
 ```
 
-|- CMakeLists.txt              // project loader script. load and build dependencies 
-|- main/                       // main project directory
-|    |
-|    |- CMakeLists.txt         // projects CMakeLists.txt
-|    |- src/                   // source folder
-|    |- test/                  // test folder
+|- CMakeLists.txt                       // projects CMakeLists.txt
+|- src/                                 // source folder
+|- test/                                // test folder
+|- utility/install-oatpp-modules.sh     // utility script to install required oatpp-modules.
 |
-|- video/                      // media files and playlists here
-     |- generate_pls.sh        // example how to use ```ffmpeg``` to generate initial playlist and video chunks
-     |- playlist_live.m3u8     // playlist used to generate infinite playlist for http-live-streaming
+|- video/                               // media files and playlists here
+     |- generate_pls.sh                 // example how to use ```ffmpeg``` to generate initial playlist and video chunks
+     |- playlist_live.m3u8              // playlist used to generate infinite playlist for http-live-streaming
 
 ```
 ```
@@ -56,11 +54,16 @@ Server is built using oat++ Async-Api and has following endpoints:
 
 #### Using CMake
 
+**Requires**
+
+- `oatpp` module installed. You may run `utility/install-oatpp-modules.sh` 
+script to install required oatpp modules.
+
 ```
 $ mkdir build && cd build
 $ cmake ..
-$ make run        ## Download, build, and install all dependencies. Run project
-
+$ make 
+$ ./hls-example-exe             # - run application.
 ```
 
 #### In Docker
