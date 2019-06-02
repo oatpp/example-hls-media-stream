@@ -1,13 +1,14 @@
 # Example-HLS-Media-Stream [![Build Status](https://dev.azure.com/lganzzzo/lganzzzo/_apis/build/status/oatpp.example-hls-media-stream?branchName=master)](https://dev.azure.com/lganzzzo/lganzzzo/_build?definitionId=12&branchName=master)
 
-Example project how-to build HLS-streaming server using oat++ Async-API.
+Example project how-to build HLS-streaming server using oat++ (AKA oatpp) Async API.
 
-Live stream tested with Safari-Browser and VLC-player
+Live stream is tested with Safari-Browser and VLC-player
 
-More about oat++:
-- Website: [https://oatpp.io](https://oatpp.io)
-- Docs: [https://oatpp.io/docs/start](https://oatpp.io/docs/start)
-- Oat++ Repo: [https://github.com/oatpp/oatpp](https://github.com/oatpp/oatpp)
+See more:
+
+- [Oat++ Website](https://oatpp.io/)
+- [Oat++ Github Repository](https://github.com/oatpp/oatpp)
+- [Get Started](https://oatpp.io/docs/start)
 
 ## Overview
 
@@ -43,7 +44,6 @@ Server is built using oat++ Async-Api and has following endpoints:
     |- hls/                     // Playlist generator is here
     |- Utils.hpp                // Utils
     |- AppComponent.hpp         // Service config
-    |- Logger.hpp               // Application Logger
     |- App.cpp                  // main() is here
     
 ```
