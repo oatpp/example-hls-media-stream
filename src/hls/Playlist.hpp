@@ -1,10 +1,3 @@
-//
-//  Playlist.hpp
-//  Media-Stream
-//
-//  Created by Leonid on 4/1/18.
-//  Copyright © 2018 oatpp. All rights reserved.
-//
 
 #ifndef Playlist_hpp
 #define Playlist_hpp

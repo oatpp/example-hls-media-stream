@@ -1,10 +1,3 @@
-//
-//  MediaController.hpp
-//  web-starter-project
-//
-//  Created by Leonid on 2/12/18.
-//  Copyright © 2018 oatpp. All rights reserved.
-//
 
 #ifndef MediaController_hpp
 #define MediaController_hpp

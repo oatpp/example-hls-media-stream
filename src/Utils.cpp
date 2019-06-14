@@ -1,10 +1,3 @@
-//
-//  Utils.cpp
-//  AsyncApi
-//
-//  Created by Leonid on 3/31/18.
-//  Copyright © 2018 oatpp. All rights reserved.
-//
 
 #include "Utils.hpp"
 
