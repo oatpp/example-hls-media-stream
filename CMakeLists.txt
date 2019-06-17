@@ -10,6 +10,7 @@ add_library(${project_name}-lib
         src/AppComponent.hpp
         src/Utils.cpp
         src/Utils.hpp
+        src/controller/MediaController.cpp
         src/controller/MediaController.hpp
         src/hls/Playlist.cpp
         src/hls/Playlist.hpp
