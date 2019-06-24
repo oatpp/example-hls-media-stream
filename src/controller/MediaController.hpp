@@ -20,27 +20,29 @@
 class MediaController : public oatpp::web::server::api::ApiController {
 public:
   typedef MediaController __ControllerType;
-protected:
+private:
+  OATPP_COMPONENT(std::shared_ptr<StaticFilesManager>, staticFileManager);
+  OATPP_COMPONENT(std::shared_ptr<Playlist>, livePlaylist);
+private:
+  std::shared_ptr<OutgoingResponse> getStaticFileResponse(const oatpp::String& filename, const oatpp::String& rangeHeader) const;
+  std::shared_ptr<OutgoingResponse> getFullFileResponse(const oatpp::String& file) const;
+  std::shared_ptr<OutgoingResponse> getRangeResponse(const oatpp::String& rangeStr, const oatpp::String& file) const;
+public:
   MediaController(const std::shared_ptr<ObjectMapper>& objectMapper)
     : oatpp::web::server::api::ApiController(objectMapper)
   {}
 public:
-  OATPP_COMPONENT(std::shared_ptr<StaticFilesManager>, staticFileManager);
-  OATPP_COMPONENT(std::shared_ptr<Playlist>, livePlaylist);
-public:
-  
+
   /**
    *  Inject @objectMapper component here as default parameter
-   *  Do not return bare Controllable* object! use shared_ptr!
    */
-  static std::shared_ptr<MediaController> createShared(OATPP_COMPONENT(std::shared_ptr<ObjectMapper>,
-                                                                      objectMapper)){
-    return std::shared_ptr<MediaController>(new MediaController(objectMapper));
+  static std::shared_ptr<MediaController> createShared(OATPP_COMPONENT(std::shared_ptr<ObjectMapper>, objectMapper)){
+    return std::shared_ptr<MediaController>(std::make_shared<MediaController>(objectMapper));
   }
   
-  /**
-   *  Begin ENDPOINTs generation ('ApiController' codegen)
-   */
+/**
+ *  Begin ENDPOINTs generation ('ApiController' codegen)
+ */
 #include OATPP_CODEGEN_BEGIN(ApiController)
   
   
@@ -141,76 +143,21 @@ public:
     ENDPOINT_ASYNC_INIT(Static)
     
     Action act() override {
-      
+
       auto filename = request->getPathTail();
       OATPP_ASSERT_HTTP(filename, Status::CODE_400, "Filename is empty");
-      
-      //OATPP_LOGD("Server", "Request filename='%s'", filename->c_str());
-      
-      auto file = controller->staticFileManager->getFile(filename);
-      
-      OATPP_ASSERT_HTTP(file.get() != nullptr, Status::CODE_404, "File not found");
-      
-      std::shared_ptr<OutgoingResponse> response;
-      
-      auto rangeStr = request->getHeader(Header::RANGE);
-      if(!rangeStr) {
-        response = getFullFileResponse(file);
-      } else {
-        response = getRangeResponse(rangeStr, file);
-      }
-      
-      response->putHeader("Accept-Ranges", "bytes");
-      response->putHeader(Header::CONNECTION, Header::Value::CONNECTION_KEEP_ALIVE);
-      auto mimeType = controller->staticFileManager->guessMimeType(request->getPathTail());
-      if(mimeType) {
-        response->putHeader(Header::CONTENT_TYPE, mimeType);
-      } else {
-        OATPP_LOGD("Server", "Unknown Mime-Type. Header not set");
-      }
-      
-      return _return(response);
-    }
-    
-    std::shared_ptr<OutgoingResponse> getFullFileResponse(const oatpp::String& file) {
-      //OATPP_LOGD("Server", "fullfile");
-      return controller->createResponse(Status::CODE_200, file);
-    }
 
-    std::shared_ptr<OutgoingResponse> getRangeResponse(const oatpp::String& rangeStr,
-                                                       const oatpp::String& file) {
+      auto range = request->getHeader(Header::RANGE);
       
-      auto range = oatpp::web::protocol::http::Range::parse(rangeStr.getPtr());
-      
-      if(range.end == 0) {
-        range.end = file->getSize() - 1;
-      }
-      
-      OATPP_ASSERT_HTTP(range.isValid() &&
-                        range.start < file->getSize() &&
-                        range.end > range.start &&
-                        range.end < file->getSize(), Status::CODE_416, "Range is invalid");
-      
-      auto chunk = oatpp::String((const char*)&file->getData()[range.start], (v_int32)(range.end - range.start + 1), false);
-      
-      auto response = controller->createResponse(Status::CODE_206, chunk);
-      
-      oatpp::web::protocol::http::ContentRange contentRange(oatpp::web::protocol::http::ContentRange::UNIT_BYTES,
-                                                            range.start, range.end, file->getSize(), true);
-      
-      OATPP_LOGD("Server", "range=%s", contentRange.toString()->c_str());
-      
-      response->putHeader(Header::CONTENT_RANGE, contentRange.toString());
-      return response;
-      
+      return _return(controller->getStaticFileResponse(filename, range));
+
     }
     
   };
-  
-  
-  /**
-   *  Finish ENDPOINTs generation ('ApiController' codegen)
-   */
+
+/**
+ *  Finish ENDPOINTs generation ('ApiController' codegen)
+ */
 #include OATPP_CODEGEN_END(ApiController)
   
 };
