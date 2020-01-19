@@ -6,7 +6,7 @@
 #include "../Utils.hpp"
 
 #include "oatpp/web/server/api/ApiController.hpp"
-#include "oatpp/web/protocol/http/outgoing/ChunkedBufferBody.hpp"
+#include "oatpp/web/protocol/http/outgoing/StreamingBody.hpp"
 #include "oatpp/core/macro/codegen.hpp"
 #include "oatpp/core/macro/component.hpp"
 
@@ -126,7 +126,7 @@ public:
     
     Action act() override {
       v_int64 time = getMillisTickCount() - getTime0();
-      auto response = controller->createResponse(Status::CODE_200, controller->livePlaylist->generateForTime(time, 5));
+      auto response = controller->createResponse(Status::CODE_200, controller->livePlaylist->generateForTime(time, 5)->toString());
       response->putHeader("Accept-Ranges", "bytes");
       response->putHeader(Header::CONNECTION, Header::Value::CONNECTION_KEEP_ALIVE);
       response->putHeader(Header::CONTENT_TYPE, "application/x-mpegURL");
