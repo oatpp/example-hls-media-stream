@@ -16,7 +16,7 @@ oatpp::String StaticFilesManager::getExtension(const oatpp::String& filename) {
   if(dotPos != 0 && dotPos < filename->getSize() - 1) {
     return oatpp::String((const char*)&filename->getData()[dotPos + 1], filename->getSize() - dotPos - 1);
   }
-  return oatpp::String::empty();
+  return nullptr;
 }
 
 oatpp::String StaticFilesManager::getFile(const oatpp::String& path) {
@@ -48,7 +48,7 @@ oatpp::String StaticFilesManager::guessMimeType(const oatpp::String& filename) {
     }
     
   }
-  return oatpp::String::empty();
+  return nullptr;
 }
 
 oatpp::String loadFromFile(const char* fileName) {
