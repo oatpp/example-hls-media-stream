@@ -2,7 +2,7 @@
 #include "./controller/MediaController.hpp"
 #include "./AppComponent.hpp"
 
-#include "oatpp/network/server/Server.hpp"
+#include "oatpp/network/Server.hpp"
 
 #include <iostream>
 
@@ -25,8 +25,8 @@ void run() {
   
   /* create server */
   
-  oatpp::network::server::Server server(components.serverConnectionProvider.getObject(),
-                                        components.serverConnectionHandler.getObject());
+  oatpp::network::Server server(components.serverConnectionProvider.getObject(),
+                                components.serverConnectionHandler.getObject());
   
   OATPP_LOGI("Server", "Running on port %s...", components.serverConnectionProvider.getObject()->getProperty("port").toString()->c_str());
   
