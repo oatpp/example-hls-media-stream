@@ -4,8 +4,8 @@
 #include <cmath>
 
 Playlist Playlist::parse(oatpp::parser::Caret& caret) {
-  
-  auto result = RecordMarkerList::createShared();
+
+  std::list<RecordMarker> result;
   
   while (caret.canContinue()) {
     caret.findChar('#');
@@ -15,7 +15,7 @@ Playlist Playlist::parse(oatpp::parser::Caret& caret) {
       caret.skipAllRsAndNs();
       auto uriLabel = caret.putLabel();
       caret.findChar('\n');
-      result->pushBack({secs, oatpp::String(uriLabel.toString())});
+      result.push_back({secs, oatpp::String(uriLabel.toString())});
     }
     caret.findROrN();
     caret.skipAllRsAndNs();
@@ -26,7 +26,7 @@ Playlist Playlist::parse(oatpp::parser::Caret& caret) {
 }
 
 Playlist Playlist::parseFromFile(const char* filename) {
-  auto text = loadFromFile(filename);
+  auto text = oatpp::String::loadFromFile(filename);
   if(!text){
     throw std::runtime_error("Can't find playlist file. Make sure you specified full file path's for video and playlist in AppComponent.hpp");
   }
@@ -35,10 +35,10 @@ Playlist Playlist::parseFromFile(const char* filename) {
 }
 
 std::shared_ptr<oatpp::data::stream::ChunkedBuffer> Playlist::generateForTime(v_int64 millis, v_int32 numRecords) {
-  if(m_records->count() == 0) {
+  if(m_records.size() == 0) {
     throw std::runtime_error("Empty playlist");
   }
-  auto stream = oatpp::data::stream::ChunkedBuffer::createShared();;
+  auto stream = oatpp::data::stream::ChunkedBuffer::createShared();
   
   v_float64 secs = (v_float64) millis / 1000.0;
   
@@ -46,31 +46,32 @@ std::shared_ptr<oatpp::data::stream::ChunkedBuffer> Playlist::generateForTime(v_
   v_float64 loopTime = secs - rounds * m_totalDuration;
   v_float64 currTime = 0;
   
-  v_int64 mediaSequence = 1 + rounds * m_records->count();
-  
-  auto currRecordNode = m_records->getFirstNode();
-  while (currRecordNode->getNext() != nullptr) {
-    if(currRecordNode->getData().duration + currTime >= loopTime) {
+  v_int64 mediaSequence = 1 + rounds * m_records.size();
+
+  auto currRecordNode = m_records.begin();
+  auto lastRecordNode = std::prev(m_records.end());
+  while(currRecordNode != lastRecordNode) {
+    if(currRecordNode->duration + currTime >= loopTime) {
       break;
     }
-    currTime += currRecordNode->getData().duration;
-    currRecordNode = currRecordNode->getNext();
+    currTime += currRecordNode->duration;
+    currRecordNode ++;
     mediaSequence ++;
   }
   
   v_float64 targetDuration = 0;
-  RecordMarkerList list;
+  std::list<RecordMarker> list;
   for(v_int32 i = 0; i < numRecords; i++) {
-    auto& marker = currRecordNode->getData();
-    list.pushBack(marker);
+    auto& marker = *currRecordNode;
+    list.push_back(marker);
     
     if(marker.duration > targetDuration) {
       targetDuration = marker.duration;
     }
     
-    currRecordNode = currRecordNode->getNext();
-    if(currRecordNode == nullptr) {
-      currRecordNode = m_records->getFirstNode();
+    currRecordNode ++;
+    if(currRecordNode == m_records.end()) {
+      currRecordNode = m_records.begin();
     }
   }
   
@@ -81,14 +82,12 @@ std::shared_ptr<oatpp::data::stream::ChunkedBuffer> Playlist::generateForTime(v_
   << "#EXT-X-TARGETDURATION:" << (v_int32)(targetDuration + 1) << "\n"
   << "#EXT-X-VERSION:3\n"
   << "#EXT-X-MEDIA-SEQUENCE:" << mediaSequence << "\n";
-  
-  list.forEach([stream](const RecordMarker& marker){
-    
+
+  for(auto& marker : list) {
     *stream
-    << "#EXTINF:" << marker.duration << ",\n"
-    << marker.uri << "\n";
-    
-  });
+      << "#EXTINF:" << marker.duration << ",\n"
+      << marker.uri << "\n";
+  }
   
   return stream;
 }

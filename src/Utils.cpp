@@ -3,18 +3,18 @@
 
 #include <fstream>
 #include <cstring>
-#include <stdarg.h>
+#include <cstdarg>
 
 oatpp::String StaticFilesManager::getExtension(const oatpp::String& filename) {
   v_int32 dotPos = 0;
-  for(v_int32 i = filename->getSize() - 1; i > 0; i--) {
-    if(filename->getData()[i] == '.') {
+  for(v_int32 i = filename->size() - 1; i > 0; i--) {
+    if(filename->data()[i] == '.') {
       dotPos = i;
       break;
     }
   }
-  if(dotPos != 0 && dotPos < filename->getSize() - 1) {
-    return oatpp::String((const char*)&filename->getData()[dotPos + 1], filename->getSize() - dotPos - 1);
+  if(dotPos != 0 && dotPos < filename->size() - 1) {
+    return oatpp::String((const char*)&filename->data()[dotPos + 1], filename->size() - dotPos - 1);
   }
   return nullptr;
 }
@@ -29,7 +29,7 @@ oatpp::String StaticFilesManager::getFile(const oatpp::String& path) {
     return file;
   }
   oatpp::String filename = m_basePath + "/" + path;
-  file = loadFromFile(filename->c_str());
+  file = oatpp::String::loadFromFile(filename->c_str());
   return file;
 }
 
@@ -37,36 +37,18 @@ oatpp::String StaticFilesManager::guessMimeType(const oatpp::String& filename) {
   auto extension = getExtension(filename);
   if(extension) {
     
-    if(extension->equals("m3u8")){
+    if(extension == "m3u8"){
       return "application/x-mpegURL";
-    } else if(extension->equals("mp4")){
+    } else if(extension == "mp4"){
       return "video/mp4";
-    } else if(extension->equals("ts")){
+    } else if(extension == "ts"){
       return "video/MP2T";
-    } else if(extension->equals("mp3")){
+    } else if(extension == "mp3"){
       return "audio/mp3";
     }
     
   }
   return nullptr;
-}
-
-oatpp::String loadFromFile(const char* fileName) {
-  
-  std::ifstream file (fileName, std::ios::in|std::ios::binary|std::ios::ate);
-  
-  if (file.is_open()) {
-    
-    auto result = oatpp::String((v_int32) file.tellg());
-    file.seekg(0, std::ios::beg);
-    file.read((char*)result->getData(), result->getSize());
-    file.close();
-    return result;
-    
-  }
-  
-  return nullptr;
-  
 }
 
 oatpp::String formatText(const char* text, ...) {

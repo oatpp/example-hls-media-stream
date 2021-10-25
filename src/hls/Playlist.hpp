@@ -6,6 +6,7 @@
 #include "oatpp/core/parser/Caret.hpp"
 
 #include <chrono>
+#include <list>
 
 class Playlist {
 private:
@@ -14,21 +15,19 @@ private:
     v_float64 duration;
     oatpp::String uri;
   };
-  
+
 private:
-  typedef oatpp::collection::LinkedList<RecordMarker> RecordMarkerList;
-private:
-  std::shared_ptr<RecordMarkerList> m_records;
+  std::list<RecordMarker> m_records;
   v_float64 m_totalDuration;
 public:
   
-  Playlist(const std::shared_ptr<RecordMarkerList>& records)
+  Playlist(const std::list<RecordMarker>& records)
     : m_records(records)
   {
     m_totalDuration = 0;
-    m_records->forEach([this](const RecordMarker& marker){
+    for(auto marker : m_records) {
       m_totalDuration += marker.duration;
-    });
+    }
   }
   
   static Playlist parse(oatpp::parser::Caret& caret);

@@ -20,14 +20,12 @@ public:
   StaticFilesManager(const oatpp::String& basePath)
     : m_basePath(basePath)
   {}
-  
+
   oatpp::String getFile(const oatpp::String& path);
-  
   oatpp::String guessMimeType(const oatpp::String& filename);
   
 };
 
-oatpp::String loadFromFile(const char* fileName);
 oatpp::String formatText(const char* text, ...);
 v_int64 getMillisTickCount();
 

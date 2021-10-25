@@ -17,14 +17,11 @@ void run() {
   AppComponent components; // Create scope Environment components
   
   /* create ApiControllers and add endpoints to router */
-  
   auto router = components.httpRouter.getObject();
-  
-  auto mediaController = MediaController::createShared();
-  mediaController->addEndpointsToRouter(router);
+
+  router->addController(MediaController::createShared());
   
   /* create server */
-  
   oatpp::network::Server server(components.serverConnectionProvider.getObject(),
                                 components.serverConnectionHandler.getObject());
   

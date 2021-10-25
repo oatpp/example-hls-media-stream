@@ -41,20 +41,20 @@ std::shared_ptr<MediaController::OutgoingResponse> MediaController::getRangeResp
   auto range = oatpp::web::protocol::http::Range::parse(rangeStr.getPtr());
 
   if(range.end == 0) {
-    range.end = file->getSize() - 1;
+    range.end = file->size() - 1;
   }
 
   OATPP_ASSERT_HTTP(range.isValid() &&
-                    range.start < file->getSize() &&
+                    range.start < file->size() &&
                     range.end > range.start &&
-                    range.end < file->getSize(), Status::CODE_416, "Range is invalid");
+                    range.end < file->size(), Status::CODE_416, "Range is invalid");
 
-  auto chunk = oatpp::String((const char*)&file->getData()[range.start], (v_int32)(range.end - range.start + 1), false);
+  auto chunk = oatpp::String(&file->data()[range.start], (v_int32)(range.end - range.start + 1));
 
   auto response = createResponse(Status::CODE_206, chunk);
 
   oatpp::web::protocol::http::ContentRange contentRange(oatpp::web::protocol::http::ContentRange::UNIT_BYTES,
-                                                        range.start, range.end, file->getSize(), true);
+                                                        range.start, range.end, file->size(), true);
 
   OATPP_LOGD("Server", "range=%s", contentRange.toString()->c_str());
 
