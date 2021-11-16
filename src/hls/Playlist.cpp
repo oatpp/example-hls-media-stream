@@ -34,11 +34,11 @@ Playlist Playlist::parseFromFile(const char* filename) {
   return parse(caret);
 }
 
-std::shared_ptr<oatpp::data::stream::ChunkedBuffer> Playlist::generateForTime(v_int64 millis, v_int32 numRecords) {
+std::shared_ptr<oatpp::data::stream::BufferOutputStream> Playlist::generateForTime(v_int64 millis, v_int32 numRecords) {
   if(m_records.size() == 0) {
     throw std::runtime_error("Empty playlist");
   }
-  auto stream = oatpp::data::stream::ChunkedBuffer::createShared();
+  auto stream = std::make_shared<oatpp::data::stream::BufferOutputStream>();
   
   v_float64 secs = (v_float64) millis / 1000.0;
   
