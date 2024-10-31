@@ -9,9 +9,9 @@
 #include "oatpp/web/server/HttpRouter.hpp"
 #include "oatpp/network/tcp/server/ConnectionProvider.hpp"
 
-#include "oatpp/parser/json/mapping/ObjectMapper.hpp"
+#include "oatpp/json/ObjectMapper.hpp"
 
-#include "oatpp/core/macro/component.hpp"
+#include "oatpp/macro/component.hpp"
 
 /**
  *  Class which creates and holds Application components and registers components in oatpp::base::Environment
@@ -59,11 +59,7 @@ public:
    *  Create ObjectMapper component to serialize/deserialize DTOs in Contoller's API
    */
   OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, apiObjectMapper)([] {
-    auto serializerConfig = oatpp::parser::json::mapping::Serializer::Config::createShared();
-    auto deserializerConfig = oatpp::parser::json::mapping::Deserializer::Config::createShared();
-    deserializerConfig->allowUnknownFields = false;
-    auto objectMapper = oatpp::parser::json::mapping::ObjectMapper::createShared(serializerConfig, deserializerConfig);
-    return objectMapper;
+    return std::make_shared<oatpp::json::ObjectMapper>();
   }());
   
   OATPP_CREATE_COMPONENT(std::shared_ptr<StaticFilesManager>, staticFilesManager)([] {

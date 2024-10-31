@@ -2,8 +2,8 @@
 #ifndef Playlist_hpp
 #define Playlist_hpp
 
-#include "oatpp/core/data/stream/BufferStream.hpp"
-#include "oatpp/core/parser/Caret.hpp"
+#include "oatpp/data/stream/BufferStream.hpp"
+#include "oatpp/utils/parser/Caret.hpp"
 
 #include <chrono>
 #include <list>
@@ -30,7 +30,7 @@ public:
     }
   }
   
-  static Playlist parse(oatpp::parser::Caret& caret);
+  static Playlist parse(oatpp::utils::parser::Caret& caret);
   static Playlist parseFromFile(const char* filename);
   
   std::shared_ptr<oatpp::data::stream::BufferOutputStream> generateForTime(v_int64 millis, v_int32 numRecords);

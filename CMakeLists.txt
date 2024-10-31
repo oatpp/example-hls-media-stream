@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.20)
 
 set(project_name hls-example) ## rename your project here
 
 project(${project_name})
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 add_library(${project_name}-lib
         src/AppComponent.hpp
@@ -22,7 +22,7 @@ target_include_directories(${project_name}-lib
 
 ## link libs
 
-find_package(oatpp 1.3.0 REQUIRED)
+find_package(oatpp 1.4.0 REQUIRED)
 
 target_link_libraries(${project_name}-lib
         PUBLIC oatpp::oatpp

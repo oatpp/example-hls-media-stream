@@ -1,5 +1,6 @@
 
 #include "MediaController.hpp"
+#include "oatpp/base/Log.hpp"
 
 std::shared_ptr<MediaController::OutgoingResponse> MediaController::getStaticFileResponse(const oatpp::String& filename,
                                                                                           const oatpp::String& rangeHeader) const
@@ -23,7 +24,7 @@ std::shared_ptr<MediaController::OutgoingResponse> MediaController::getStaticFil
   if(mimeType) {
     response->putHeader(Header::CONTENT_TYPE, mimeType);
   } else {
-    OATPP_LOGD("Server", "Unknown Mime-Type. Header not set");
+    OATPP_LOGd("Server", "Unknown Mime-Type. Header not set");
   }
 
   return response;
@@ -56,7 +57,7 @@ std::shared_ptr<MediaController::OutgoingResponse> MediaController::getRangeResp
   oatpp::web::protocol::http::ContentRange contentRange(oatpp::web::protocol::http::ContentRange::UNIT_BYTES,
                                                         range.start, range.end, file->size(), true);
 
-  OATPP_LOGD("Server", "range=%s", contentRange.toString()->c_str());
+  OATPP_LOGd("Server", "range={}", contentRange.toString())
 
   response->putHeader(Header::CONTENT_RANGE, contentRange.toString());
   return response;

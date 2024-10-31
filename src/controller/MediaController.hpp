@@ -2,13 +2,13 @@
 #ifndef MediaController_hpp
 #define MediaController_hpp
 
-#include "../hls/Playlist.hpp"
-#include "../Utils.hpp"
+#include "hls/Playlist.hpp"
+#include "Utils.hpp"
 
 #include "oatpp/web/server/api/ApiController.hpp"
 #include "oatpp/web/protocol/http/outgoing/StreamingBody.hpp"
-#include "oatpp/core/macro/codegen.hpp"
-#include "oatpp/core/macro/component.hpp"
+#include "oatpp/macro/codegen.hpp"
+#include "oatpp/macro/component.hpp"
 
 #include <unordered_map>
 

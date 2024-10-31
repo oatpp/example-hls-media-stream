@@ -1,9 +1,12 @@
 
 #include "Playlist.hpp"
-#include "../Utils.hpp"
+#include "Utils.hpp"
+
+#include "oatpp/base/Log.hpp"
+
 #include <cmath>
 
-Playlist Playlist::parse(oatpp::parser::Caret& caret) {
+Playlist Playlist::parse(oatpp::utils::parser::Caret& caret) {
 
   std::list<RecordMarker> result;
   
@@ -30,7 +33,7 @@ Playlist Playlist::parseFromFile(const char* filename) {
   if(!text){
     throw std::runtime_error("Can't find playlist file. Make sure you specified full file path's for video and playlist in AppComponent.hpp");
   }
-  oatpp::parser::Caret caret(text);
+  oatpp::utils::parser::Caret caret(text);
   return parse(caret);
 }
 
@@ -75,7 +78,7 @@ std::shared_ptr<oatpp::data::stream::BufferOutputStream> Playlist::generateForTi
     }
   }
   
-  OATPP_LOGD("playlist", "generating sequence %d", mediaSequence);
+  OATPP_LOGd("playlist", "generating sequence {}", mediaSequence);
   
   *stream
   << "#EXTM3U\n"

@@ -2,8 +2,8 @@
 #ifndef Utils_hpp
 #define Utils_hpp
 
-#include "oatpp/core/concurrency/SpinLock.hpp"
-#include "oatpp/core/Types.hpp"
+#include "oatpp/concurrency/SpinLock.hpp"
+#include "oatpp/Types.hpp"
 
 #include <unordered_map>
 #include <string>
